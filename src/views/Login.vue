@@ -49,14 +49,18 @@
                 size="large"
                 placeholder="请输入邮箱验证码"
                 v-model.trim="formData.emailCode"
-                show-password
               >
                 <template #prefix>
                   <span class="iconfont icon-checkcode"></span>
                 </template>
               </el-input>
-              <el-buttton class="send-email-btn" type="primary" size="large"
-                >获取验证码</el-buttton
+
+              <el-button
+                class="send-email-btn"
+                type="primary"
+                size="large"
+                @click="getEmailCode"
+                >获取验证码</el-button
               >
             </div>
             <el-popover placement="left" :width="500" trigger="click">
@@ -183,6 +187,18 @@
       :showCancel="false"
       @close="dialogConfig4SendMailCode.show = false"
     >
+      <el-form
+        :model="formData4SendMailCode"
+        :rules="rules"
+        ref="formData4SendMailCodeRef"
+        label-width="80px"
+        @submit.prevent
+      >
+        <!-- 输入 -->
+        <el-form-item label="邮箱">
+          {{ formData.email }}
+        </el-form-item>
+      </el-form>
     </Dialog>
   </div>
 </template>
@@ -241,6 +257,34 @@ const checkCodeUrl = ref(api.checkCode);
 const changeCheckCode = (type) => {
   checkCodeUrl.value =
     api.checkCode + "?type=" + type + "&time=" + new Date().getTime(); //验证码的刷新就是靠这个时间戳
+};
+
+//发送邮箱验证码
+const formData4SendMailCode = ref({});
+const formData4SendMailCodeRef = ref();
+
+const dialogConfig4SendMailCode = reactive({
+  show: false,
+  title: "发送邮箱验证码",
+  buttons: [
+    {
+      type: "primary",
+      text: "发送验证码",
+      click: (e) => {
+        submitForm();
+      },
+    },
+  ],
+});
+
+const getEmailCode = () => {
+  // formDataRef.value.validateField("email", (valid) => {
+  //   if (!valid) {
+  //     return;
+  //   }
+  //   dialogConfig4SendMailCode.show = true;
+  // });
+  console.log(formDataRef);
 };
 </script>
 
